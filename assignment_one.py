@@ -14,15 +14,30 @@ import tensorflow as tf
 
 x = tf.random_uniform([])  # Empty array as shape creates a scalar.
 y = tf.random_uniform([])
-out = tf.cond(tf.less(x, y), lambda: tf.add(x, y), lambda: tf.sub(x, y))
-
+out = tf.cond(tf.less(x, y), lambda: tf.add(x, y), lambda: tf.subtract(x, y))
+with tf.Session() as sess:
+    x,y,out = sess.run([x,y,out])
+    print("=========1a==========")
+    print("x: ", x)
+    print("y: ", y)
+    print("out: ", out)
 ###############################################################################
 # 1b: Create two 0-d tensors x and y randomly selected from -1 and 1.
 # Return x + y if x < y, x - y if x > y, 0 otherwise.
 # Hint: Look up tf.case().
 ###############################################################################
+x_1b = tf.random_uniform([], minval=-1, maxval=1)
+y_1b = tf.random_uniform([], minval=-1, maxval=1)
 
-# YOUR CODE
+predicate_dict = {tf.less(x_1b, y_1b) : lambda :tf.add(x_1b, y_1b), tf.greater(x_1b,y_1b): lambda :tf.subtract(x_1b,y_1b)}
+
+out_1b = tf.case(predicate_dict, default= lambda : tf.constant(0, dtype=tf.float32))
+with tf.Session() as sess:
+    x_1b, y_1b, out_1b = sess.run([x_1b, y_1b, out_1b])
+    print("=========1b===========")
+    print("x :", x_1b)
+    print("y :", y_1b)
+    print("out: ", out_1b)
 
 ###############################################################################
 # 1c: Create the tensor x of the value [[0, -2, -1], [0, 1, 2]]
@@ -30,8 +45,13 @@ out = tf.cond(tf.less(x, y), lambda: tf.add(x, y), lambda: tf.sub(x, y))
 # Return a boolean tensor that yields Trues if x equals y element-wise.
 # Hint: Look up tf.equal().
 ###############################################################################
-
-# YOUR CODE
+x_1c = tf.constant([[0, -2, -1], [0, 1, 2]], dtype=tf.float32)
+y_1c = tf.zeros_like(x)
+out_1c = tf.equal(x_1c, y_1c)
+with tf.Session() as sess:
+    out_1c = sess.run(out_1c)
+print("=========1c===========")
+print(out_1c)
 
 ###############################################################################
 # 1d: Create the tensor x of value
